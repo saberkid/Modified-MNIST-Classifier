@@ -12,11 +12,11 @@ import numpy
 
 batch_size = 128
 num_classes = 40
-epochs = 25
-TRAIN_FILE = "../data/train_labeled_nbg"
-TEST_FILE = "../data/test_x.csv_nbg"
-# TRAIN_FILE = "../data/train_0.8"
-# TEST_FILE = "../data/val_0.2"
+epochs = 10
+# TRAIN_FILE = "../data/train_labeled_nbg"
+# TEST_FILE = "../data/test_x.csv_nbg"
+TRAIN_FILE = "../data/train_0.8"
+TEST_FILE = "../data/val_0.2"
 # input image dimensions
 img_rows, img_cols = 64, 64
 
@@ -24,8 +24,8 @@ img_rows, img_cols = 64, 64
 reader = Reader(TRAIN_FILE, TEST_FILE)
 x_train, y_train = reader.read_train()
 
-x_test = reader.read_test()
-# x_test, y_test = reader.read_val()
+# x_test = reader.read_test()
+x_test, y_test = reader.read_val()
 
 if K.image_data_format() == 'channels_first':
     x_train = x_train.reshape(x_train.shape[0], 1, img_rows, img_cols)
@@ -50,35 +50,32 @@ print(x_test.shape[0], 'test samples')
 
 model = Sequential()
 model.add(Conv2D(32, kernel_size=(3, 3),       
-                 activation='relu',
+                 activation='relu',padding='same',
                  input_shape=input_shape))
-model.add(Conv2D(32, (3, 3), activation='relu'))
+model.add(Conv2D(32, (3, 3), padding='same', activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 
-#model.add(Dropout(0.25))
-model.add(Conv2D(32, kernel_size=(3, 3),       
-                 activation='relu'
-                 ))
-model.add(Conv2D(32, (3, 3), activation='relu'))
+model.add(Conv2D(32, (3, 3), padding='same', activation='relu'))
+model.add(Conv2D(32, (3, 3), padding='same', activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 
-model.add(Conv2D(64, kernel_size=(3, 3),       
-                 activation='relu'
-                 ))
-model.add(Conv2D(64, (3, 3), activation='relu'))
-model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(Conv2D(64, (3, 3), padding='same', activation='relu'))
+model.add(Conv2D(64, (3, 3), padding='same', activation='relu'))
+model.add(Conv2D(64, (3, 3), padding='same', activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 
-model.add(Conv2D(64, kernel_size=(3, 3),       
-                 activation='relu'
-                 ))
-model.add(Conv2D(64, (3, 3), activation='relu'))
-model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(Conv2D(64, (3, 3), padding='same', activation='relu'))
+model.add(Conv2D(64, (3, 3), padding='same', activation='relu'))
+model.add(Conv2D(64, (3, 3), padding='same', activation='relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 
-#model.add(Dropout(0.5))
+
+
 model.add(Flatten())
+model.add(Dropout(0.5))
 model.add(Dense(512, activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(256, activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(num_classes, activation='softmax'))
 
@@ -86,7 +83,7 @@ checkpointer_1 = ModelCheckpoint(filepath="weights-{epoch:02d}.hdf5", verbose=1,
 model.compile(loss=keras.losses.categorical_crossentropy,
               optimizer='adam',#.optimizers.Adadelta(),
               metrics=['accuracy'])
-model.load_weights('cnn_weights.h5') 
+#model.load_weights('cnn_weights.h5') 
 model.fit(x_train, y_train,
           batch_size=batch_size,
           epochs=epochs,
