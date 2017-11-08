@@ -2,9 +2,9 @@ import random
 import numpy as np
 from loader import *
 
-train_file = "/Users/michliu/PycharmProjects/sample_train_x.csv"
-label_file = "/Users/michliu/PycharmProjects/sample_train_y.csv"
-reader = Reader(train_file, label_file)  
+train_file = "../data/train_labeled_nbg"
+#label_file = "../data/sample_train_y.csv"
+reader = Reader(train_file)
 training_data = reader.read_train()
 
 
@@ -15,9 +15,9 @@ def sigmoid_prime(z):    # Derivative of the sigmoid function.
     return sigmoid(z)*(1-sigmoid(z))
 
 
-class NN(object): 
-    
-    def __init__(self, sizes): 
+class NN(object):
+
+    def __init__(self, sizes):
         '''need to be modify. the [sizes] here need to be manually inputted
         e.g. net = NN([2,3,1]), 2 neurons in the first layer, 3 neurons in the second layer, and 1 neuron in the final layer'''
         self.num_layers = len(sizes)
@@ -30,8 +30,8 @@ class NN(object):
         """Return the output of the network if "a" is input."""
         for b, w in zip(self.biases, self.weights):
             a = sigmoid(np.dot(w, a)+b)
-        return a   
-    
+        return a
+
     def SGD(self, training_data, epochs, mini_batch_size, eta,
             test_data=None):
         """Train the neural network using mini-batch stochastic
@@ -43,11 +43,11 @@ class NN(object):
         epoch, and partial progress printed out.  This is useful for
         tracking progress, but slows things down substantially."""
         if test_data: n_test = len(test_data)
-        
-        training_data = list(training_data)
+
+        #training_data = list(training_data)
         n = len(training_data)
         for j in range(epochs):
-            random.shuffle(training_data)
+            #random.shuffle(training_data)
             mini_batches = [
                 training_data[k:k+mini_batch_size]
                 for k in range(0, n, mini_batch_size)]
@@ -58,7 +58,7 @@ class NN(object):
                     j, self.evaluate(test_data), n_test))
             else:
                 print("Epoch {0} complete".format(j))
-    
+
     def update_mini_batch(self, mini_batch, eta):
         """Update the network's weights and biases by applying
         gradient descent using backpropagation to a single mini batch.
@@ -70,9 +70,9 @@ class NN(object):
             delta_nabla_b, delta_nabla_w = self.backprop(x, y)
             nabla_b = [nb+dnb for nb, dnb in zip(nabla_b, delta_nabla_b)]
             nabla_w = [nw+dnw for nw, dnw in zip(nabla_w, delta_nabla_w)]
-        self.weights = [w-(eta/len(mini_batch))*nw 
+        self.weights = [w-(eta/len(mini_batch))*nw
                         for w, nw in zip(self.weights, nabla_w)]
-        self.biases = [b-(eta/len(mini_batch))*nb 
+        self.biases = [b-(eta/len(mini_batch))*nb
                        for b, nb in zip(self.biases, nabla_b)]
     #delta_nabla_b, delta_nabla_w = self.backprop(x, y)
     def backprop(self, x, y):
@@ -80,24 +80,27 @@ class NN(object):
         gradient for the cost function C_x.  ``nabla_b`` and
         ``nabla_w`` are layer-by-layer lists of numpy arrays, similar
         to ``self.biases`` and ``self.weights``."""
+        y = np.asarray(y).reshape(len(y),1)
         nabla_b = [np.zeros(b.shape) for b in self.biases]
         nabla_w = [np.zeros(w.shape) for w in self.weights]
         # feedforward
-        activation = x
-        activations = [x] # list to store all the activations, layer by layer
+        activation = np.asarray(x).reshape(len(x),1)
+        activations = [activation] # list to store all the activations, layer by layer
         zs = [] # list to store all the z vectors, layer by layer
         for b, w in zip(self.biases, self.weights):
+            # print w.shape
+            # print b.shape
+            # print activation.shape
             z = np.dot(w, activation)+b
             zs.append(z)
             activation = sigmoid(z)
             activations.append(activation)
         # backward pass
-        delta = self.cost_derivative(activations[-1], y) * \
-            sigmoid_prime(zs[-1])
+        delta = self.cost_derivative(activations[-1], y)
         nabla_b[-1] = delta
         nabla_w[-1] = np.dot(delta, activations[-2].transpose())
         # l = 1 means the last layer of neurons, l = 2 is the
-        # second-last layer, and so on. 
+        # second-last layer, and so on.
         for l in range(2, self.num_layers):
             z = zs[-l]
             sp = sigmoid_prime(z)
@@ -123,4 +126,4 @@ class NN(object):
 
 
 net = NN([4096, 90, 40])
-net.SGD(training_data, 30, 10, 1.0)
+net.SGD(training_data, 5, 10, 1.0)
