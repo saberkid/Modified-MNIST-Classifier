@@ -1,12 +1,12 @@
 import random
 import numpy as np
 from loader import *
-
-train_file = "../data/train_labeled_nbg"
+test_file = "../test_x.csv_nbg"
+train_file = "../train_labeled_nbg"
 #label_file = "../data/sample_train_y.csv"
-reader = Reader(train_file)
+reader = Reader(train_file, test_file)
 training_data = reader.read_train()
-
+test_data = reader.read_test()
 
 def sigmoid(z):     # sigmoid funtion
     return 1.0/(1.0+np.exp(-z))
@@ -43,7 +43,7 @@ class NN(object):
         epoch, and partial progress printed out.  This is useful for
         tracking progress, but slows things down substantially."""
         if test_data: n_test = len(test_data)
-
+        test_data = np.asarray(test_data)
         #training_data = list(training_data)
         n = len(training_data)
         for j in range(epochs):
@@ -53,11 +53,23 @@ class NN(object):
                 for k in range(0, n, mini_batch_size)]
             for mini_batch in mini_batches:
                 self.update_mini_batch(mini_batch, eta)
-            if test_data:
-                print( "Epoch {0}: {1} / {2}".format(
-                    j, self.evaluate(test_data), n_test))
-            else:
-                print("Epoch {0} complete".format(j))
+            #if test_data:
+                #print( "Epoch {0}: {1} / {2}".format(
+                #    j, self.evaluate(test_data), n_test))
+                #pass
+            #else:
+            #    print("Epoch {0} complete".format(j))
+        with open("predictions",'w+') as predict_writer:
+            predict_writer.writelines("ID,Label\n")
+            for i in range(n_test):
+                predict = self.feedforward(test_data[i])
+                predict = predict.tolist()
+                #print(len(predict))
+                #print(np.argmax(predict))
+                label = reader.num_list[predict.index(max(predict))]
+                predict_writer.writelines(str(label)+'\n')
+
+
 
     def update_mini_batch(self, mini_batch, eta):
         """Update the network's weights and biases by applying
@@ -122,8 +134,8 @@ class NN(object):
     def cost_derivative(self, output_activations, y):
         """Return the vector of partial derivatives \partial C_x /
         \partial a for the output activations."""
-        return (output_activations-y)
+        return (output_activations-y)  
 
 
 net = NN([4096, 90, 40])
-net.SGD(training_data, 5, 10, 1.0)
+net.SGD(training_data, 5, 10, 1.0, test_data)
