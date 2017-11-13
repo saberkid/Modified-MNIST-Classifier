@@ -1,6 +1,8 @@
 # Modified MNIST Classification
 COMP 551 pj3
+
 Team CAM.
+
 overleaf:https://www.overleaf.com/11915340sdswysdbtgzs#/45169305/
 
 ## Getting Started
@@ -13,7 +15,7 @@ python lr.py
 python svm.py
 ```
 ## Neural Networks from scratch by Python.
-Under MLP folder, run:
+Under NN folder, run:
 ```
 python main.py
 ```
