@@ -33,14 +33,7 @@ class Reader:
                 line_vector = self.vectorizer(line)
                 X_train.append(line_vector)
                 y_train.append(self.mapping[int(label)])
-                # X_train, y_train = np.asarray(X_train), np.asarray(y_train)
-                # x = X_train[0].reshape(64, 64)  # reshape
-                # y = y_train[0]
-                # print x
-                # print y
-                # plt.imshow(x)
-                # plt.show()
-                # break
+
         X_train, y_train = np.asarray(X_train), np.asarray(y_train)
         return X_train, y_train
 
