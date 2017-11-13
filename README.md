@@ -1,9 +1,8 @@
 # Modified MNIST Classification
-COMP 551 pj3
+COMP 551 Project 3
 
 Team CAM.
 
-overleaf:https://www.overleaf.com/11915340sdswysdbtgzs#/45169305/
 
 ## Getting Started
 Required packages: [keras 2.0.6](https://keras.io/), [numpy 1.12.1](http://www.numpy.org/), [sklearn](http://scikit-learn.org/stable/)
