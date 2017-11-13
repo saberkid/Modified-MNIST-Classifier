@@ -9,7 +9,7 @@ overleaf:https://www.overleaf.com/11915340sdswysdbtgzs#/45169305/
 Required packages: [keras 2.0.6](https://keras.io/), [numpy 1.12.1](http://www.numpy.org/), [sklearn](http://scikit-learn.org/stable/)
 
 ## Logistic Regression and SVM baseline classifier
-In repective folder (LR, SVM), run:
+In respective folder (LR, SVM), run:
 ```
 python lr.py
 python svm.py
