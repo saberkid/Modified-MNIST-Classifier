@@ -1,3 +1,4 @@
+# Logistic Regression
 
 import scipy.misc as dfg
 import matplotlib.pyplot as plt
