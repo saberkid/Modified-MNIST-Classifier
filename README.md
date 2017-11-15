@@ -8,7 +8,7 @@ Team CAM.
 Required packages: [keras 2.0.6](https://keras.io/), [numpy 1.12.1](http://www.numpy.org/), [sklearn](http://scikit-learn.org/stable/)
 
 ## Data
-Please note that becasue of the size limitation of upload file in CMT, all preprocessed dataset is uploaded in data folder in our github repo: https://github.com/saberkid/Modified-MNIST-Classifier 
+Please note that becasue of the size limitation of upload file in CMT, all preprocessed dataset is uploaded in data folder [here](https://github.com/saberkid/Modified-MNIST-Classifier/tree/master/data)
 
 Please unzip the file prior to the following steps.
 
